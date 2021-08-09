@@ -1,0 +1,61 @@
+apiVersion: krew.googlecontainertools.github.com/v1alpha2
+kind: Plugin
+metadata:
+  name: vault
+spec:
+  version: {VERSION}
+  homepage: https://kubeform.com
+  shortDescription: kubectl plugin for Kubeform by AppsCode
+  description: |
+    This plugin provides a list of commands to interact with Kubeform custom resources.
+  platforms:
+    - selector:
+        matchLabels:
+          os: darwin
+          arch: amd64
+      uri: https://github.com/kubeform/cli/releases/download/{VERSION}/kubectl-kf-darwin-amd64.tar.gz
+      sha256: {SHA256SUM_DARWIN_AMD64}
+      files:
+        - from: "*"
+          to: "."
+      bin: kubectl-kf-darwin-amd64
+    - selector:
+        matchLabels:
+          os: linux
+          arch: amd64
+      uri: https://github.com/kubeform/cli/releases/download/{VERSION}/kubectl-kf-linux-amd64.tar.gz
+      sha256: {SHA256SUM_LINUX_AMD64}
+      files:
+        - from: "*"
+          to: "."
+      bin: kubectl-kf-linux-amd64
+    - selector:
+        matchLabels:
+          os: linux
+          arch: arm
+      uri: https://github.com/kubeform/cli/releases/download/{VERSION}/kubectl-kf-linux-arm.tar.gz
+      sha256: {SHA256SUM_LINUX_ARM}
+      files:
+        - from: "*"
+          to: "."
+      bin: kubectl-kf-linux-arm
+    - selector:
+        matchLabels:
+          os: linux
+          arch: arm64
+      uri: https://github.com/kubeform/cli/releases/download/{VERSION}/kubectl-kf-linux-arm64.tar.gz
+      sha256: {SHA256SUM_LINUX_ARM64}
+      files:
+        - from: "*"
+          to: "."
+      bin: kubectl-kf-linux-arm64
+    - selector:
+        matchLabels:
+          os: windows
+          arch: amd64
+      uri: https://github.com/kubeform/cli/releases/download/{VERSION}/kubectl-kf-windows-amd64.zip
+      sha256: {SHA256SUM_WINDOWS_AMD64}
+      files:
+        - from: "*"
+          to: "."
+      bin: kubectl-kf-windows-amd64.exe
