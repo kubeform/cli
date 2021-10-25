@@ -17,19 +17,19 @@ limitations under the License.
 package main
 
 import (
-	"os"
-
 	"kubeform.dev/cli/pkg/cmds"
 
-	"gomodules.xyz/kglog"
+	"gomodules.xyz/logs"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
+	"k8s.io/klog/v2"
 )
 
 func main() {
-	kglog.InitLogs()
-	defer kglog.FlushLogs()
+	rootCmd := cmds.NewRootCmd()
+	logs.Init(rootCmd, false)
+	defer logs.FlushLogs()
 
-	if err := cmds.NewRootCmd().Execute(); err != nil {
-		os.Exit(1)
+	if err := rootCmd.Execute(); err != nil {
+		klog.Fatal(err)
 	}
 }

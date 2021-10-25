@@ -17,15 +17,11 @@ limitations under the License.
 package cmds
 
 import (
-	"flag"
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"gomodules.xyz/kglog"
 	v "gomodules.xyz/x/version"
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
-	cliflag "k8s.io/component-base/cli/flag"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	"kmodules.xyz/client-go/tools/cli"
 )
@@ -41,24 +37,19 @@ func NewRootCmd() *cobra.Command {
 	}
 
 	flags := rootCmd.PersistentFlags()
-	// Normalize all flags that are coming from other packages or pre-configurations
-	// a.k.a. change all "_" to "-". e.g. glog package
-	flags.SetNormalizeFunc(cliflag.WordSepNormalizeFunc)
 
 	kubeConfigFlags := genericclioptions.NewConfigFlags(true)
 	kubeConfigFlags.AddFlags(flags)
 	matchVersionKubeConfigFlags := cmdutil.NewMatchVersionFlags(kubeConfigFlags)
 	matchVersionKubeConfigFlags.AddFlags(flags)
 
-	flags.AddGoFlagSet(flag.CommandLine)
-	kglog.ParseFlags()
-	flags.BoolVar(&cli.EnableAnalytics, "analytics", cli.EnableAnalytics, "Send analytical events to Google Analytics")
-	utilruntime.Must(flag.Set("stderrthreshold", "ERROR"))
+	flags.BoolVar(&cli.EnableAnalytics, "enable-analytics", cli.EnableAnalytics, "Send analytical events to Google Analytics")
 
-	fmt.Println(matchVersionKubeConfigFlags)
-	// rootCmd.AddCommand(NewCmdApprove(matchVersionKubeConfigFlags))
-	// rootCmd.AddCommand(NewCmdDeny(matchVersionKubeConfigFlags))
+	f := cmdutil.NewFactory(matchVersionKubeConfigFlags)
+	fmt.Println(f)
+
 	rootCmd.AddCommand(NewCmdCompletion())
 	rootCmd.AddCommand(v.NewCmdVersion())
+
 	return rootCmd
 }
