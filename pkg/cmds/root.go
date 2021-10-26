@@ -50,6 +50,7 @@ func NewRootCmd() *cobra.Command {
 
 	rootCmd.AddCommand(NewCmdCompletion())
 	rootCmd.AddCommand(v.NewCmdVersion())
+	rootCmd.AddCommand(NewCmdGettf())
 
 	return rootCmd
 }
