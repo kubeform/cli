@@ -24,6 +24,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
@@ -33,9 +34,11 @@ import (
 )
 
 type GetTFOptions struct {
-	CmdParent string
-	Namespace string
-	Directory string
+	CmdParent           string
+	Namespace           string
+	Directory           string
+	OperatorNamespace   string
+	OperatorServiceName string
 
 	Config *rest.Config
 
@@ -47,7 +50,7 @@ type GetTFOptions struct {
 }
 
 func NewCmdGetTF(parent string, f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
-	var directory string
+	var directory, operatorNamespace, operatorServiceName string
 
 	cmd := &cobra.Command{
 		Use:               "get-tf",
@@ -55,9 +58,11 @@ func NewCmdGetTF(parent string, f cmdutil.Factory, streams genericclioptions.IOS
 		DisableAutoGenTag: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			o := &GetTFOptions{
-				CmdParent: parent,
-				IOStreams: streams,
-				Directory: directory,
+				CmdParent:           parent,
+				IOStreams:           streams,
+				Directory:           directory,
+				OperatorNamespace:   operatorNamespace,
+				OperatorServiceName: operatorServiceName,
 			}
 			cmdutil.CheckErr(o.Complete(f, cmd, args))
 			cmdutil.CheckErr(o.Run())
@@ -66,6 +71,8 @@ func NewCmdGetTF(parent string, f cmdutil.Factory, streams genericclioptions.IOS
 	}
 
 	cmd.Flags().StringVarP(&directory, "directory", "d", "", "directory where tf and tfstate should store")
+	cmd.Flags().StringVar(&operatorNamespace, "operator-ns", "kubeform", "namespace where respective cloud provider's kubeform operator is installed")
+	cmd.Flags().StringVar(&operatorServiceName, "operator-svc", "", "respective cloud provider's kubeform operator service name")
 
 	return cmd
 }
@@ -120,10 +127,12 @@ func (o *GetTFOptions) Run() error {
 	}
 
 	gvr := infos[0].Mapping.Resource
-	resourceName := o.BuilderArgs[0]
-	resource := gvr.Resource
+	resourceName := o.BuilderArgs[1]
+	reSource := gvr.Resource
 	group := gvr.Group
 	version := gvr.Version
+	temp := strings.Split(group, ".")
+	providerName := temp[1]
 
 	tr, err := rest.TransportFor(o.Config)
 	if err != nil {
@@ -136,11 +145,17 @@ func (o *GetTFOptions) Run() error {
 					"resource-name": "` + resourceName + `", 
 					"group": "` + group + `", 
 					"version": "` + version + `", 
-					"resource": "` + resource + `"
+					"resource": "` + reSource + `"
 			}`)
 	buf := bytes.NewBuffer(jsn)
 
-	url := o.Config.Host + "/api/v1/namespaces/kubeform/services/https:kubeform-provider-linode-webhook-server:/proxy/tf"
+	operatorServiceName := "kubeform-provider-" + providerName + "-webhook-server"
+	if o.OperatorServiceName != "" {
+		operatorServiceName = o.OperatorServiceName
+	}
+	operatorNamespace := o.OperatorNamespace
+
+	url := o.Config.Host + "/api/v1/namespaces/" + operatorNamespace + "/services/https:" + operatorServiceName + ":/proxy/tf"
 
 	req, err := http.NewRequest(http.MethodPost, url, buf)
 	if err != nil {
@@ -156,7 +171,6 @@ func (o *GetTFOptions) Run() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(string(bdy))
 
 	tmp := make(map[string]string)
 	err = json.Unmarshal(bdy, &tmp)
@@ -166,19 +180,28 @@ func (o *GetTFOptions) Run() error {
 
 	tf := tmp["tf"]
 	tfstate := tmp["tfstate"]
+	var tempInterface interface{}
+	err = json.Unmarshal([]byte(tfstate), &tempInterface)
+	if err != nil {
+		return err
+	}
+	tfstateByte, err := json.MarshalIndent(tempInterface, "", "\t")
+	if err != nil {
+		return err
+	}
 
 	directory := o.Directory
 	if directory == "" {
-		fmt.Println("tf : ")
+		fmt.Println("tf is : ")
 		fmt.Println(tf)
-		fmt.Println("tfstate : ")
-		fmt.Println(tfstate)
+		fmt.Println("tfstate is : ")
+		fmt.Println(string(tfstateByte))
 	} else {
 		err := os.WriteFile(filepath.Join(directory, "main.tf"), []byte(tf), 0777)
 		if err != nil {
 			return err
 		}
-		err = os.WriteFile(filepath.Join(directory, "terraform.tfstate"), []byte(tfstate), 0777)
+		err = os.WriteFile(filepath.Join(directory, "terraform.tfstate"), tfstateByte, 0777)
 		if err != nil {
 			return err
 		}
