@@ -18,6 +18,7 @@ package cmds
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/spf13/cobra"
 	v "gomodules.xyz/x/version"
@@ -26,7 +27,7 @@ import (
 	"kmodules.xyz/client-go/tools/cli"
 )
 
-func NewRootCmd() *cobra.Command {
+func NewKubeformCmd(in io.Reader, out, err io.Writer) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:               "kf [command]",
 		Short:             `Kubeform cli by AppsCode`,
@@ -47,9 +48,11 @@ func NewRootCmd() *cobra.Command {
 
 	f := cmdutil.NewFactory(matchVersionKubeConfigFlags)
 	fmt.Println(f)
+	ioStreams := genericclioptions.IOStreams{In: in, Out: out, ErrOut: err}
 
 	rootCmd.AddCommand(NewCmdCompletion())
 	rootCmd.AddCommand(v.NewCmdVersion())
+	rootCmd.AddCommand(NewCmdGetTF("kf", f, ioStreams))
 
 	return rootCmd
 }

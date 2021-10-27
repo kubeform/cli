@@ -17,6 +17,8 @@ limitations under the License.
 package main
 
 import (
+	"os"
+
 	"kubeform.dev/cli/pkg/cmds"
 
 	"gomodules.xyz/logs"
@@ -25,7 +27,7 @@ import (
 )
 
 func main() {
-	rootCmd := cmds.NewRootCmd()
+	rootCmd := cmds.NewKubeformCmd(os.Stdin, os.Stdout, os.Stderr)
 	logs.Init(rootCmd, false)
 	defer logs.FlushLogs()
 
