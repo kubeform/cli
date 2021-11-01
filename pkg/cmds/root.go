@@ -17,7 +17,6 @@ limitations under the License.
 package cmds
 
 import (
-	"fmt"
 	"io"
 
 	"github.com/spf13/cobra"
@@ -47,7 +46,7 @@ func NewKubeformCmd(in io.Reader, out, err io.Writer) *cobra.Command {
 	flags.BoolVar(&cli.EnableAnalytics, "enable-analytics", cli.EnableAnalytics, "Send analytical events to Google Analytics")
 
 	f := cmdutil.NewFactory(matchVersionKubeConfigFlags)
-	fmt.Println(f)
+
 	ioStreams := genericclioptions.IOStreams{In: in, Out: out, ErrOut: err}
 
 	rootCmd.AddCommand(NewCmdCompletion())
