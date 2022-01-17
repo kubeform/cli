@@ -52,6 +52,7 @@ func NewKubeformCmd(in io.Reader, out, err io.Writer) *cobra.Command {
 	rootCmd.AddCommand(NewCmdCompletion())
 	rootCmd.AddCommand(v.NewCmdVersion())
 	rootCmd.AddCommand(NewCmdGetTF("kf", f, ioStreams))
+	rootCmd.AddCommand(NewCmdGenModule("kf", f))
 
 	return rootCmd
 }
