@@ -19,7 +19,6 @@ require (
 
 require (
 	github.com/ghodss/yaml v1.0.0
-	github.com/hashicorp/go-getter v1.5.11
 	kubeform.dev/module v0.0.0-20220208050414-3c6c0759c49a
 )
 
