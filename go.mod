@@ -19,7 +19,7 @@ require (
 
 require (
 	github.com/ghodss/yaml v1.0.0
-	kubeform.dev/module v0.0.0-20220208050414-3c6c0759c49a
+	kubeform.dev/module v0.0.0-20220216063623-6c8067d4fd85
 )
 
 require (
