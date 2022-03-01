@@ -197,11 +197,11 @@ func (o *GetTFOptions) Run() error {
 		fmt.Println("tfstate is : ")
 		fmt.Println(string(tfstateByte))
 	} else {
-		err := os.WriteFile(filepath.Join(directory, "main.tf"), []byte(tf), 0777)
+		err := os.WriteFile(filepath.Join(directory, "main.tf"), []byte(tf), 0o777)
 		if err != nil {
 			return err
 		}
-		err = os.WriteFile(filepath.Join(directory, "terraform.tfstate"), tfstateByte, 0777)
+		err = os.WriteFile(filepath.Join(directory, "terraform.tfstate"), tfstateByte, 0o777)
 		if err != nil {
 			return err
 		}
