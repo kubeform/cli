@@ -278,7 +278,7 @@ func generateModuleTRD(source, moduleDefName, providerName, providerSource, dire
 		}
 
 		modDefYamlPath := filepath.Join(directory, moduleDefName+".yaml")
-		err = os.WriteFile(modDefYamlPath, modYml, 0774)
+		err = os.WriteFile(modDefYamlPath, modYml, 0o774)
 		if err != nil {
 			return err
 		}
@@ -286,7 +286,7 @@ func generateModuleTRD(source, moduleDefName, providerName, providerSource, dire
 		var secretYamlPath string
 		if credSecretName != "" {
 			secretYamlPath = filepath.Join(directory, credSecretName+".yaml")
-			err = os.WriteFile(secretYamlPath, secretYaml, 0774)
+			err = os.WriteFile(secretYamlPath, secretYaml, 0o774)
 			if err != nil {
 				return err
 			}
@@ -313,7 +313,7 @@ func generateModuleTRD(source, moduleDefName, providerName, providerSource, dire
 func createGitRepoTempPath(path string) error {
 	_, err := os.Stat(path)
 	if os.IsNotExist(err) {
-		err = os.MkdirAll(path, 0777)
+		err = os.MkdirAll(path, 0o777)
 		if err != nil {
 			return err
 		}
