@@ -4,11 +4,12 @@ on:
   push:
     tags:
       - "*.*"
-
   workflow_dispatch:
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
+
 jobs:
   build:
     name: Build
@@ -41,6 +42,7 @@ jobs:
         with:
           files: |
             bin/kubectl-kf-darwin-amd64.tar.gz
+            bin/kubectl-kf-darwin-arm64.tar.gz
             bin/kubectl-kf-linux-amd64.tar.gz
             bin/kubectl-kf-linux-arm.tar.gz
             bin/kubectl-kf-linux-arm64.tar.gz
