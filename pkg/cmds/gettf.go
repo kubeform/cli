@@ -172,10 +172,14 @@ func (o *GetTFOptions) Run() error {
 		return err
 	}
 
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("Failed to generate tf files because : %v\n", string(bdy))
+	}
+
 	tmp := make(map[string]string)
 	err = json.Unmarshal(bdy, &tmp)
 	if err != nil {
-		return fmt.Errorf(err.Error(), string(bdy))
+		return fmt.Errorf("Failed to generate tf files because : %v. The response body is : %v\n", err.Error(), string(bdy))
 	}
 
 	tf := tmp["tf"]
