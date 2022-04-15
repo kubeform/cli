@@ -175,7 +175,7 @@ func (o *GetTFOptions) Run() error {
 	tmp := make(map[string]string)
 	err = json.Unmarshal(bdy, &tmp)
 	if err != nil {
-		return err
+		return fmt.Errorf(err.Error(), string(bdy))
 	}
 
 	tf := tmp["tf"]
@@ -201,10 +201,12 @@ func (o *GetTFOptions) Run() error {
 		if err != nil {
 			return err
 		}
+		fmt.Println("main.tf is Successfully generated!")
 		err = os.WriteFile(filepath.Join(directory, "terraform.tfstate"), tfstateByte, 0o777)
 		if err != nil {
 			return err
 		}
+		fmt.Println("terraform.tfstate is Successfully generated!")
 	}
 
 	return nil
