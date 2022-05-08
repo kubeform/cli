@@ -656,7 +656,7 @@ kmodules.xyz/client-go/meta
 kmodules.xyz/client-go/tools/analytics
 kmodules.xyz/client-go/tools/cli
 kmodules.xyz/client-go/tools/clusterid
-# kubeform.dev/module v0.0.0-20220224131514-f329d42cf603
+# kubeform.dev/module v0.1.0
 ## explicit; go 1.17
 kubeform.dev/module/api/v1alpha1
 # sigs.k8s.io/cli-utils v0.26.1

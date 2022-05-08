@@ -18,7 +18,7 @@ require (
 	k8s.io/klog/v2 v2.9.0
 	k8s.io/kubectl v0.21.1
 	kmodules.xyz/client-go v0.0.0-20220317213815-2a6d5a5784f2
-	kubeform.dev/module v0.0.0-20220224131514-f329d42cf603
+	kubeform.dev/module v0.1.0
 )
 
 require (

@@ -45,8 +45,7 @@ type ModuleDefinitionSpec struct {
 }
 
 // ModuleDefinitionStatus defines the observed state of ModuleDefinition
-type ModuleDefinitionStatus struct {
-}
+type ModuleDefinitionStatus struct{}
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
