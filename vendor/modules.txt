@@ -323,7 +323,7 @@ gomodules.xyz/sets
 # gomodules.xyz/wait v0.2.0
 ## explicit; go 1.14
 gomodules.xyz/wait
-# gomodules.xyz/x v0.0.13
+# gomodules.xyz/x v0.0.14
 ## explicit; go 1.17
 gomodules.xyz/x/analytics
 gomodules.xyz/x/version
