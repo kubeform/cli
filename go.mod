@@ -9,7 +9,7 @@ require (
 	golang.org/x/text v0.3.7
 	gomodules.xyz/logs v0.0.6
 	gomodules.xyz/runtime v0.2.0
-	gomodules.xyz/x v0.0.13
+	gomodules.xyz/x v0.0.14
 	k8s.io/api v0.22.1
 	k8s.io/apiextensions-apiserver v0.22.1
 	k8s.io/apimachinery v0.22.1
